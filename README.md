@@ -15,7 +15,7 @@ Menus and the HUD float on a screen in front of you. The desktop window keeps sh
 
 - Windows 10/11 (64-bit)
 - [Rolling Quest](https://krampus1721.itch.io/rollingquest) (Windows version, tested with v0.3.0.4)
-- [SteamVR](https://store.steampowered.com/app/250820/SteamVR/) and a SteamVR headset (tested with a Valve Index)
+- [SteamVR](https://store.steampowered.com/app/250820/SteamVR/) and a SteamVR headset (tested with a Bigscreen Beyond 2 and Valve Index controllers)
 - One of these controllers:
   - A gamepad (PS4/PS5, Xbox), or the keyboard
   - VR controllers (Index, Touch or Vive)
