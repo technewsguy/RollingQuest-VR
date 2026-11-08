@@ -1,0 +1,23 @@
+{
+  "controller_type": "oculus_touch",
+  "description": "Rolling Quest VR default: sticks, triggers, X/Y and A/B, stick clicks",
+  "name": "Rolling Quest VR default",
+  "bindings": {
+    "/actions/rqvr": {
+      "sources": [
+        { "path": "/user/hand/left/input/joystick", "mode": "joystick",
+          "inputs": { "position": { "output": "/actions/rqvr/in/stick_l" }, "click": { "output": "/actions/rqvr/in/stickclick_l" } } },
+        { "path": "/user/hand/right/input/joystick", "mode": "joystick",
+          "inputs": { "position": { "output": "/actions/rqvr/in/stick_r" }, "click": { "output": "/actions/rqvr/in/stickclick_r" } } },
+        { "path": "/user/hand/left/input/trigger", "mode": "trigger",
+          "inputs": { "pull": { "output": "/actions/rqvr/in/trigger_l" } } },
+        { "path": "/user/hand/right/input/trigger", "mode": "trigger",
+          "inputs": { "pull": { "output": "/actions/rqvr/in/trigger_r" } } },
+        { "path": "/user/hand/left/input/x", "mode": "button", "inputs": { "click": { "output": "/actions/rqvr/in/a_l" } } },
+        { "path": "/user/hand/right/input/a", "mode": "button", "inputs": { "click": { "output": "/actions/rqvr/in/a_r" } } },
+        { "path": "/user/hand/left/input/y", "mode": "button", "inputs": { "click": { "output": "/actions/rqvr/in/b_l" } } },
+        { "path": "/user/hand/right/input/b", "mode": "button", "inputs": { "click": { "output": "/actions/rqvr/in/b_r" } } }
+      ]
+    }
+  }
+}

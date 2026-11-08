@@ -1,0 +1,21 @@
+# Build output (the release zip goes to GitHub Releases)
+build/
+dist/
+src/bin/
+src/obj/
+
+# Third-party binaries: downloaded by fetch-deps.ps1
+deps/*.zip
+deps/openvr/openvr_api.dll
+
+# Local research material - never publish (decompiled game code)
+_research/
+
+# Source images for tools\MakeArt.cs (the game's itch.io images and in-game logo)
+art/source/
+
+# Misc
+*.pdb
+*.log
+*.user
+.vs/

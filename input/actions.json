@@ -1,0 +1,38 @@
+{
+  "default_bindings": [
+    { "controller_type": "knuckles", "binding_url": "bindings_knuckles.json" },
+    { "controller_type": "oculus_touch", "binding_url": "bindings_oculus_touch.json" },
+    { "controller_type": "vive_controller", "binding_url": "bindings_vive_controller.json" }
+  ],
+  "action_sets": [
+    { "name": "/actions/rqvr", "usage": "leftright" }
+  ],
+  "actions": [
+    { "name": "/actions/rqvr/in/stick_l", "type": "vector2" },
+    { "name": "/actions/rqvr/in/stick_r", "type": "vector2" },
+    { "name": "/actions/rqvr/in/stickclick_l", "type": "boolean" },
+    { "name": "/actions/rqvr/in/stickclick_r", "type": "boolean" },
+    { "name": "/actions/rqvr/in/trigger_l", "type": "vector1" },
+    { "name": "/actions/rqvr/in/trigger_r", "type": "vector1" },
+    { "name": "/actions/rqvr/in/a_l", "type": "boolean" },
+    { "name": "/actions/rqvr/in/a_r", "type": "boolean" },
+    { "name": "/actions/rqvr/in/b_l", "type": "boolean" },
+    { "name": "/actions/rqvr/in/b_r", "type": "boolean" }
+  ],
+  "localization": [
+    {
+      "language_tag": "en_US",
+      "/actions/rqvr": "Rolling Quest VR",
+      "/actions/rqvr/in/stick_l": "Roll / turn / menu (left stick)",
+      "/actions/rqvr/in/stick_r": "Diorama: turn and resize the model (right stick)",
+      "/actions/rqvr/in/stickclick_l": "Switch follow / diorama view (Share)",
+      "/actions/rqvr/in/stickclick_r": "Recenter view",
+      "/actions/rqvr/in/trigger_l": "Look down (R1)",
+      "/actions/rqvr/in/trigger_r": "Look up (R2)",
+      "/actions/rqvr/in/a_l": "Action (X / Square)",
+      "/actions/rqvr/in/a_r": "Jump / accept (A / Cross)",
+      "/actions/rqvr/in/b_l": "Pause (Start / Options)",
+      "/actions/rqvr/in/b_r": "Back (B / Circle)"
+    }
+  ]
+}
