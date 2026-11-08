@@ -34,6 +34,19 @@ Menus and the HUD float on a screen in front of you. The desktop window keeps sh
 
 Starting the game from Rolling Quest VR closes SteamVR's "Resume Game" menu automatically. Your gamepad goes through Steam Input, like any Steam game.
 
+### With UniGetUI or Scoop
+
+Rolling Quest VR is also in the [technewsguy/scoop-vr-mods](https://github.com/technewsguy/scoop-vr-mods) bucket, so [UniGetUI](https://github.com/marticliment/UniGetUI) (formerly WingetUI) or [Scoop](https://scoop.sh) can install it and keep it up to date:
+
+- **UniGetUI:** Settings > Package managers > Scoop > Buckets. Add `vrmods` with the URL `https://github.com/technewsguy/scoop-vr-mods`, then search for `rollingquest-vr` and install it.
+- **Command line:**
+  ```powershell
+  scoop bucket add vrmods https://github.com/technewsguy/scoop-vr-mods
+  scoop install vrmods/rollingquest-vr
+  ```
+
+It finds your Rolling Quest folder or asks you to pick it. **Rolling Quest VR - Add to Steam** in the Start menu does step 3 above. Uninstalling the package removes the mod again.
+
 ## Controls
 
 The game's own gamepad and keyboard controls work as usual. VR controllers act as a gamepad:
