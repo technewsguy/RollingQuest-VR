@@ -72,11 +72,12 @@ namespace RollingQuestVR
             Vector2 s = Vector2.zero;
             try
             {
-                var pad = UnityEngine.InputSystem.Gamepad.current;
-                if (pad != null)
+                // Every pad, not Gamepad.current: an idle (or noisy) PS4 pad seen raw can stay "current" while the VR
+                // controllers' virtual pad is the one in use.
+                foreach (var pad in UnityEngine.InputSystem.Gamepad.all)
                 {
-                    s = pad.leftStick.ReadValue();
-                    Vector2 d = pad.dpad.ReadValue();
+                    Vector2 l = pad.leftStick.ReadValue(), d = pad.dpad.ReadValue();
+                    if (l.sqrMagnitude > s.sqrMagnitude) s = l;
                     if (d.sqrMagnitude > s.sqrMagnitude) s = d;
                 }
             }

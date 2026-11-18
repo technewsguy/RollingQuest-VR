@@ -11,9 +11,10 @@ using UnityEngine;
 
 namespace RollingQuestVR
 {
-    [BepInPlugin("rollingquestvr.mod", "Rolling Quest VR", "1.0.0")]
+    [BepInPlugin("rollingquestvr.mod", "Rolling Quest VR", Plugin.Version)]
     public class Plugin : BasePlugin
     {
+        public const string Version = "1.1.0";
         internal static ManualLogSource L;
         internal static ConfigEntry<float> WorldScale;
         internal static ConfigEntry<KeyCode> KeyRecenter, KeyView;

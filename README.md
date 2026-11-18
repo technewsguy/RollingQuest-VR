@@ -22,17 +22,18 @@ Menus and the HUD float on a screen in front of you. The desktop window keeps sh
 
 ## Install
 
-1. Download `RollingQuest-VR-v1.0.0.zip` from **[Releases](https://github.com/technewsguy/RollingQuest-VR/releases)**.
-2. Unzip everything into the Rolling Quest folder, the one that contains `RollingQuest.exe`.
-3. Double-click **`Rolling Quest VR - Add to Steam.bat`**. It:
-   - Adds **Rolling Quest VR** to your Steam library and SteamVR library, with cover, header, background, logo and icon art.
-   - Puts a **Rolling Quest VR** shortcut on your desktop.
-   - Closes Steam while it works, then starts it again.
-4. With your headset connected, start **Rolling Quest VR** from Steam, SteamVR or the desktop.
+1. Download **`RollingQuest-VR-Setup-v1.1.0.exe`** from **[Releases](https://github.com/technewsguy/RollingQuest-VR/releases)** and double-click it.
+2. It finds your Rolling Quest folder (or lets you pick it) and installs the mod there. It also adds **Rolling Quest VR** to Steam, with artwork, listed in SteamVR's library (under *Non-Steam*).
+   - If Steam is open, it asks to restart Steam. If you say no, the entry is added the next time Steam restarts.
+3. With your headset connected, start **Rolling Quest VR** from Steam or SteamVR.
 
 > The **first start takes a minute or two** while BepInEx (the mod loader) prepares the game. It needs an internet connection that one time, to download Unity's base libraries. Later starts are quick.
 
-Starting the game from Rolling Quest VR closes SteamVR's "Resume Game" menu automatically. Your gamepad goes through Steam Input, like any Steam game.
+The mod is part of the game folder now, so `RollingQuest.exe` always starts in VR, whichever way you launch it.
+
+**Upgrading from 1.0:** just run the new installer. It removes the old launcher, scripts, desktop shortcut and SteamVR entry, and points the existing **Rolling Quest VR** Steam entry straight at the game (your artwork and controller settings stay).
+
+**Linux (Steam + Proton):** run the installer through Proton (add it to Steam as a non-Steam game, force Proton, start it once). It installs the mod and then shows the few Steam settings to make by hand, including the launch option `WINEDLLOVERRIDES="winhttp=n,b" %command%`.
 
 ### With UniGetUI or Scoop
 
@@ -45,7 +46,7 @@ Rolling Quest VR is also in the [technewsguy/scoop-vr-mods](https://github.com/t
   scoop install vrmods/rollingquest-vr
   ```
 
-It finds your Rolling Quest folder or asks you to pick it. **Rolling Quest VR - Add to Steam** in the Start menu does step 3 above. Uninstalling the package removes the mod again.
+It runs the same installer silently. If it can't find your Rolling Quest folder, it asks you to pick it (or set the `ROLLINGQUEST_DIR` environment variable). Uninstalling the package removes the mod again.
 
 ## Controls
 
@@ -89,8 +90,7 @@ Edit `BepInEx\config\rollingquestvr.mod.cfg`, which is created after the first s
 
 ## Uninstall
 
-1. Double-click **`Rolling Quest VR - Uninstall.bat`** in the game folder. Your saves are kept.
-2. Remove **Rolling Quest VR** from Steam: right-click it > *Manage* > *Remove non-Steam game from your library*.
+Double-click **`Rolling Quest VR Uninstall.exe`** in the game folder. It removes the mod, BepInEx (unless other mods use it) and the Steam entry (Steam restarts, if you agree). Your saves are kept.
 
 ## How it works
 
@@ -100,20 +100,20 @@ Rolling Quest is a Unity 2023 game built with IL2CPP. The mod is a [BepInEx 6](h
 - **Menus and HUD:** the game's screen-space canvases are redirected into a texture, which floats on a quad in front of you.
 - **VR controllers:** they're read through SteamVR Input and fed to the game's Input System as a virtual gamepad.
 - **Diorama steering:** a [Harmony](https://github.com/BepInEx/HarmonyX) patch on the game's ball controller turns stick directions into the game's turn and forward inputs.
-- **Launcher:** it has SteamVR "launch" a placeholder app, which closes SteamVR's dashboard, then starts the game itself.
+- **Installer:** one exe with BepInEx and the mod inside. It adds the Steam entry by editing Steam's `shortcuts.vdf` while Steam is closed (with `OpenVR` set, which puts it in the VR library).
 
 ### Building
 
 ```powershell
 .\fetch-deps.ps1                                   # BepInEx 6 be.793 IL2CPP + openvr_api.dll into .\deps
 .\build.ps1 -GameDir "C:\path\to\Rolling Quest"    # needs BepInEx installed there and the game started once
-.\make-release.ps1 -Version 1.0.0                  # dist\RollingQuest-VR-v1.0.0.zip
+.\make-release.ps1 -GameDir "C:\path\to\Rolling Quest"  # dist\RollingQuest-VR-Setup-v<version>.exe + RollingQuest-VR-v<version>.zip
 ```
 
 ## Credits
 
 - **Rolling Quest** © krampus1721. This is an unofficial fan mod. The artwork in `art/` is made from the game's own images (its itch.io page and in-game logo) and belongs to its developer. Please support the game: <https://krampus1721.itch.io/rollingquest>
-- [BepInEx](https://github.com/BepInEx/BepInEx) (LGPL-2.1), bundled in the release zip, with [Il2CppInterop](https://github.com/BepInEx/Il2CppInterop) and [HarmonyX](https://github.com/BepInEx/HarmonyX)
+- [BepInEx](https://github.com/BepInEx/BepInEx) (LGPL-2.1), bundled in the installer, with [Il2CppInterop](https://github.com/BepInEx/Il2CppInterop) and [HarmonyX](https://github.com/BepInEx/HarmonyX)
 - [OpenVR](https://github.com/ValveSoftware/openvr) by Valve (BSD-3-Clause)
 
 The mod's own code is under the [MIT License](LICENSE).

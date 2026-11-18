@@ -1,39 +1,24 @@
-# Packages dist\RollingQuest-VR-v<version>.zip, to be unzipped into the Rolling Quest folder:
-#   BepInEx 6 IL2CPP (winhttp.dll, doorstop_config.ini, dotnet\, BepInEx\core ...) + BepInEx\plugins\RollingQuestVR\
-#   (plugin, openvr_api.dll, launcher, SteamShortcut.exe, scripts, input bindings, artwork) + the two .bat files + README.
-# Run fetch-deps.ps1 and build.ps1 first.
-param([string]$Version = "1.0.0")
+# Builds the mod and packages the release:
+#   dist\RollingQuest-VR-Setup-v<version>.exe   the installer on its own (what most people download)
+#   dist\RollingQuest-VR-v<version>.zip         the same installer + README and license (used by the Scoop bucket)
+# Run fetch-deps.ps1 first. -GameDir: a Rolling Quest folder with BepInEx 6 that has been started once (see build.ps1).
+param([string]$GameDir = "S:\Games\rollingcube-windows")
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
-$stage = "$root\dist\stage"
-$zip = "$root\dist\RollingQuest-VR-v$Version.zip"
-if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
+& (Join-Path $root 'build.ps1') -GameDir $GameDir
+$ver = ([regex]'const string Version = "([^"]+)"').Match((Get-Content (Join-Path $root 'src\Plugin.cs') -Raw)).Groups[1].Value
+$name = "RollingQuest-VR-v$ver"
+$stage = Join-Path $root "dist\$name"
+Remove-Item $stage -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force $stage | Out-Null
-
-Expand-Archive "$root\deps\BepInEx-Unity.IL2CPP-win-x64-6.0.0-be.793.zip" -DestinationPath $stage -Force
-$pd = "$stage\BepInEx\plugins\RollingQuestVR"
-New-Item -ItemType Directory -Force $pd, "$pd\input", "$pd\art" | Out-Null
-Copy-Item "$root\build\RollingQuestVR.dll", "$root\build\RollingQuestVR-launch.exe", "$root\build\SteamShortcut.exe" $pd
-Copy-Item "$root\deps\openvr\openvr_api.dll" $pd
-Copy-Item "$root\scripts\add-to-steam.ps1", "$root\scripts\uninstall.ps1" $pd
-Copy-Item "$root\input\*.json" "$pd\input"
-Copy-Item "$root\art\*.jpg", "$root\art\*.png" "$pd\art"
-Copy-Item "$root\scripts\Rolling Quest VR - Add to Steam.bat", "$root\scripts\Rolling Quest VR - Uninstall.bat" $stage
-(Get-Content "$root\scripts\README.txt" -Raw).Replace("{VERSION}", "v$Version") | Set-Content "$stage\Rolling Quest VR - README.txt" -Encoding UTF8
-Copy-Item "$root\LICENSE" "$pd\LICENSE.txt"
-
-if (Test-Path $zip) { Remove-Item $zip }
-Add-Type -AssemblyName System.IO.Compression.FileSystem
-Add-Type -AssemblyName System.IO.Compression
-# Entries are written one by one so their paths use "/" (Windows PowerShell's CreateFromDirectory writes "\").
-$archive = [IO.Compression.ZipFile]::Open($zip, [IO.Compression.ZipArchiveMode]::Create)
-try {
-    Get-ChildItem $stage -Recurse -File -Force | ForEach-Object {
-        $rel = $_.FullName.Substring($stage.Length + 1).Replace('\', '/')
-        [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $_.FullName, $rel, [IO.Compression.CompressionLevel]::Optimal)
-    }
-    # keep the empty BepInEx folders the loader expects
-    foreach ($d in "BepInEx/patchers/") { [void]$archive.CreateEntry($d) }
-} finally { $archive.Dispose() }
+Copy-Item (Join-Path $root 'build\RollingQuest-VR-Setup.exe'), (Join-Path $root 'README.md') $stage
+Copy-Item (Join-Path $root 'LICENSE') (Join-Path $stage 'LICENSE.txt')
+$zip = Join-Path $root "dist\$name.zip"
+Remove-Item $zip -ErrorAction SilentlyContinue
+Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip
 Remove-Item $stage -Recurse -Force
-Write-Host "Release package: $zip ($([math]::Round((Get-Item $zip).Length / 1MB, 1)) MB)"
+$exe = Join-Path $root "dist\RollingQuest-VR-Setup-v$ver.exe"
+Copy-Item (Join-Path $root 'build\RollingQuest-VR-Setup.exe') $exe -Force
+foreach ($f in $exe, $zip) {
+    Write-Host ("Release file: {0}  ({1} MB)  SHA256 {2}" -f $f, [math]::Round((Get-Item $f).Length / 1MB, 2), (Get-FileHash $f).Hash.ToLower())
+}

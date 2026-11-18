@@ -171,11 +171,11 @@ namespace RollingQuestVR
             Vector2 stick = Vector2.zero;
             try
             {
-                var pad = UnityEngine.InputSystem.Gamepad.current;
-                if (pad != null)
+                foreach (var pad in UnityEngine.InputSystem.Gamepad.all)   // every pad, not Gamepad.current (see DioramaSteer)
                 {
                     if (pad.selectButton.wasPressedThisFrame) toggle = true;   // Share on a PS4 controller
-                    stick = pad.rightStick.ReadValue();
+                    Vector2 r = pad.rightStick.ReadValue();
+                    if (r.sqrMagnitude > stick.sqrMagnitude) stick = r;
                 }
             }
             catch (Exception) { }
@@ -235,12 +235,27 @@ namespace RollingQuestVR
             if (!_hookedBeforeRender) BeforeRender();
         }
 
+        // v1.0.0's launcher registered its own "Rolling Quest VR" SteamVR library entry. The installer removes it while
+        // SteamVR is closed; if SteamVR was running then, it left the manifest behind and the entry is removed here.
+        private static void RemoveOldLibraryEntry()
+        {
+            try
+            {
+                string manifest = Path.Combine(BepInEx.Paths.PluginPath, "RollingQuestVR", "rollingquestvr.vrmanifest");
+                if (!File.Exists(manifest)) return;
+                Plugin.L.LogInfo("Old SteamVR library entry: " + OpenVR.Applications.RemoveApplicationManifest(manifest));
+                File.Delete(manifest);
+            }
+            catch (Exception e) { Plugin.L.LogWarning("Old SteamVR library entry cleanup failed: " + e.Message); }
+        }
+
         private void InitVR()
         {
             _initTried = true;
             var err = EVRInitError.None;
             OpenVR.Init(ref err, EVRApplicationType.VRApplication_Scene);
             if (err != EVRInitError.None) { Plugin.L.LogError("OpenVR.Init failed: " + err); return; }
+            RemoveOldLibraryEntry();
             OpenVR.Compositor.SetTrackingSpace(ETrackingUniverseOrigin.TrackingUniverseSeated);
             uint w = 0, h = 0;
             OpenVR.System.GetRecommendedRenderTargetSize(ref w, ref h);
